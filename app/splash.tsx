@@ -1,29 +1,27 @@
-import {
-  RecordingPresets,
-  useAudioRecorder,
-  useAudioRecorderState,
-} from "expo-audio";
-import * as MediaLibrary from "expo-media-library";
-import { useRouter } from "expo-router";
-import { useEffect } from "react";
+// import {
+//   RecordingPresets,
+//   useAudioRecorder,
+//   useAudioRecorderState,
+// } from "expo-audio";
+// import * as MediaLibrary from "expo-media-library";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
-  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
-  const recorderState = useAudioRecorderState(audioRecorder);
-  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+  // const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  // const recorderState = useAudioRecorderState(audioRecorder);
+  // const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
-  const record = async () => {
-    await audioRecorder.prepareToRecordAsync();
-    audioRecorder.record();
-  };
-  const router = useRouter();
+  // const record = async () => {
+  //   await audioRecorder.prepareToRecordAsync();
+  //   audioRecorder.record();
+  // };
+  // const router = useRouter();
 
   // 추후 로그인되지 않았을 경우에만 이동하도록 수정 예정
-  useEffect(() => {
-    // 아직 라우터가 준비되지 않음
-    router.replace("/entry");
-  }, [router]);
+  // useEffect(() => {
+  //   // 아직 라우터가 준비되지 않음
+  //   router.replace("/entry");
+  // }, [router]);
   // const stopRecording = async () => {
   //   await audioRecorder.stop();
   //   const uri = recorderState.url;
