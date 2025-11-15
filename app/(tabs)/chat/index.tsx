@@ -53,23 +53,23 @@ export default function ChatScreen() {
           <View style={styles.suggestionWrapper}>
             <View style={styles.row}>
               <SuggestionButton
-                text="약 먹을 시간 언제야?"
                 icon={<IconMedicine width={18} height={18} />}
+                text={"약 먹을 시간\n언제야?"}
               />
               <SuggestionButton
-                text="아들에게 전화 걸어줘"
                 icon={<IconPhone width={18} height={18} />}
+                text={"아들에게\n전화 걸어줘"}
               />
             </View>
 
             <View style={styles.row}>
               <SuggestionButton
-                text="오늘 날씨 어때?"
                 icon={<IconWeather width={18} height={18} />}
+                text={"오늘 날씨\n어때?"}
               />
               <SuggestionButton
-                text="오늘 장볼 것들 메모해줘"
                 icon={<IconMemo width={18} height={18} />}
+                text={"오늘 장볼 것들\n메모해줘"}
               />
             </View>
           </View>
@@ -78,7 +78,7 @@ export default function ChatScreen() {
         {/* ---------- 입력창 ---------- */}
         <View style={styles.inputRow}>
           <View style={styles.leftBox}>
-            <IconStars width={18} height={18} />
+            <IconStars width={24} height={24} />
             <Text style={styles.placeholderText}>
               루미에게 말하거나 입력해보세요
             </Text>
@@ -89,9 +89,9 @@ export default function ChatScreen() {
             onPress={() => setMicOn(!micOn)}
           >
             {micOn ? (
-              <MicPressed width={26} height={26} />
+              <MicPressed width={70} height={70} />
             ) : (
-              <MicDefault width={26} height={26} />
+              <MicDefault width={70} height={70} />
             )}
           </TouchableOpacity>
         </View>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  /* 상단 */
+  /* ---------------- 상단 ---------------- */
   topRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -148,6 +148,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
+
+    /** 그림자  */
+    shadowColor: "rgba(0,0,0,0.22)",
+    shadowOpacity: 1,
+    shadowRadius: 12,
+    shadowOffset: { width: 8, height: 5 },
+    elevation: 20,
   },
   rightTag: {
     flexDirection: "row",
@@ -157,13 +164,20 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 16,
     gap: 6,
+
+    /** 그림자  */
+    shadowColor: "rgba(0,0,0,0.22)",
+    shadowOpacity: 1,
+    shadowRadius: 12,
+    shadowOffset: { width: 8, height: 5 },
+    elevation: 20,
   },
   tagText: {
     fontSize: 13,
     fontWeight: "600",
   },
 
-  /* 날짜 */
+  /* ---------------- 날짜 ---------------- */
   dateText: {
     marginTop: 20,
     textAlign: "center",
@@ -172,9 +186,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  /* 헤딩 */
+  /* ---------------- 헤딩 ---------------- */
   headingBox: {
-    marginTop: 360,
+    marginTop: 300,
   },
   heading: {
     fontSize: 24,
@@ -189,35 +203,43 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  /* 추천 질문 */
+  /* ---------------- 추천 질문 ---------------- */
   suggestionWrapper: {
     marginTop: 26,
   },
   row: {
     flexDirection: "row",
-    gap: 10,
-    marginBottom: 12,
+    gap: 12,
+    marginBottom: 14,
   },
+
   suggestionBtn: {
     flex: 1,
     flexDirection: "row",
     gap: 8,
     backgroundColor: "#fff",
-    paddingVertical: 14,
-    paddingHorizontal: 12,
-    borderRadius: 14,
+    paddingVertical: 16,
+    paddingHorizontal: 14,
+    borderRadius: 16,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.07,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-  },
-  suggestionText: {
-    fontSize: 14,
-    fontWeight: "600",
+
+    /** 그림자  */
+    shadowColor: "rgba(0,0,0,0.22)",
+    shadowOpacity: 1,
+    shadowRadius: 12,
+    shadowOffset: { width: 8, height: 5 },
+    elevation: 8,
   },
 
-  /* 입력 */
+  suggestionText: {
+    fontSize: 15,
+    fontWeight: "600",
+    flexShrink: 1,
+    flexWrap: "wrap",
+    lineHeight: 22,
+  },
+
+  /* ---------------- 입력창 ---------------- */
   inputRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -228,6 +250,12 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#fff",
     marginBottom: 6,
+
+    shadowColor: "rgba(0,0,0,0.22)",
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 7,
   },
 
   leftBox: {
@@ -238,8 +266,8 @@ const styles = StyleSheet.create({
 
   placeholderText: {
     color: "#E65B54",
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "700",
   },
 
   micBtn: {
@@ -250,11 +278,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
 
-    // shadow
-    shadowColor: "rgba(31,49,65,0.20)",
-    shadowOffset: { width: 0, height: 4 },
+    /** 그림자  */
+    shadowColor: "rgba(0,0,0,0.22)",
     shadowOpacity: 1,
-    shadowRadius: 10,
-    elevation: 12,
+    shadowRadius: 12,
+    shadowOffset: { width: 8, height: 5 },
+    elevation: 20,
   },
 });
