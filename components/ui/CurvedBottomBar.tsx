@@ -62,7 +62,7 @@ export default function CurvedBottomBar() {
       inactiveIcon: My,
     },
   ];
-
+  if (current === "chat") return null;
   return (
     <View style={styles.container}>
       {/* 곡선 Background */}
