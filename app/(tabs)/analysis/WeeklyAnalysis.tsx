@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import WeeklyStatus from "@/components/anaylysis/WeeklyStatus";
+import { View } from "react-native";
 
 export default function WeeklyAnalysis() {
   return (
     <View>
-      <Text>주간보고서</Text>
+      <WeeklyStatus />
     </View>
   );
 }
