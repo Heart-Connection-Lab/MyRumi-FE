@@ -14,7 +14,7 @@ import ChatMessages from "@/components/ui/chat/ChatMessages";
 
 export default function ChatScreen() {
   const [micOn, setMicOn] = useState(false);
-  const [isStarted, setIsStarted] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
