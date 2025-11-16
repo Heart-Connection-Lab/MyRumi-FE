@@ -80,10 +80,10 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     padding: 18,
-    borderRadius: 16,
+    borderRadius: 20,
     gap: 14,
 
-    shadowColor: "#000",
+    shadowColor: "#878787",
     shadowOpacity: 0.05,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 3 },

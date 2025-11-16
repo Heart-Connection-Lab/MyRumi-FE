@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import WelfareCarousel from "@/components/anaylysis/WelfareCarousel";
@@ -11,7 +17,11 @@ export default function AnalysisPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.inner}>
+      {/* 전체 스크롤 영역 */}
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* ---------- 상단 타이틀 ---------- */}
         <View style={styles.section}>
           <WelfareCarousel />
@@ -43,10 +53,10 @@ export default function AnalysisPage() {
         </View>
 
         {/* ---------- 콘텐츠 ---------- */}
-        <View style={styles.contentArea}>
+        <View style={{ paddingBottom: 40 }}>
           {tab === "daily" ? <DailyAnalysis /> : <WeeklyAnalysis />}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -59,8 +69,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
   },
 
-  inner: {
-    flex: 1,
+  /* ScrollView 내부 패딩 */
+  scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 10,
   },
@@ -69,36 +79,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 8,
-  },
-
-  title: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#000",
-    marginBottom: 20,
-  },
-
-  /* 탭 */
-  tabRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 20,
-  },
-
-  tabBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    backgroundColor: "#EAEAEA",
-  },
-
-  activeTabText: {
-    color: "#fff",
-  },
-
-  /* 콘텐츠 영역 */
-  contentArea: {
-    flex: 1,
   },
 
   /* 탭 외곽 컨테이너 (회색 배경) */
@@ -111,7 +91,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  /* 탭 버튼 (기본 — 투명) */
   tabItem: {
     flex: 1,
     justifyContent: "center",
@@ -120,7 +99,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
 
-  /* 선택된 탭 */
   activeTabItem: {
     backgroundColor: "#FFFFFF",
     shadowColor: "rgba(0,0,0,0.08)",
@@ -130,14 +108,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
 
-  /* 탭 텍스트 */
   tabText: {
     fontSize: 16,
     fontWeight: "600",
     color: "#888",
   },
 
-  /* 선택된 탭 텍스트 */
   activeTabText: {
     color: "#000",
     fontWeight: "700",

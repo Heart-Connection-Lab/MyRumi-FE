@@ -58,6 +58,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     gap: 16,
+    shadowColor: "#505050",
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
   },
 
   statRow: {
