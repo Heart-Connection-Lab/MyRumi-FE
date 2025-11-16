@@ -28,15 +28,21 @@ import { useState } from "react";
 
 export default function CurvedBottomBar() {
   const router = useRouter();
-  const segments = useSegments();
-  const current = segments[segments.length - 1]; // index | analysis | chat | my
+  const segments = useSegments(); // ["(tabs)", "my", "profile"]
+  const current = segments[segments.length - 1];
   const [isMicActive, setIsMicActive] = useState(false);
+
+  const isMyActive = segments.includes("my");
+  const isAnalysisActive = segments.includes("analysis");
+  const isChatActive = segments.includes("chat");
+  const isHomeActive = segments.length === 1 && segments[0] === "(tabs)";
 
   const tabs = [
     {
       name: "index",
       label: "홈",
       route: "/(tabs)",
+      active: isHomeActive,
       activeIcon: HomePressed,
       inactiveIcon: Home,
     },
@@ -44,6 +50,7 @@ export default function CurvedBottomBar() {
       name: "analysis",
       label: "분석",
       route: "/(tabs)/analysis",
+      active: isAnalysisActive,
       activeIcon: AnalysisPressed,
       inactiveIcon: Analysis,
     },
@@ -51,6 +58,7 @@ export default function CurvedBottomBar() {
       name: "chat",
       label: "대화",
       route: "/(tabs)/chat",
+      active: isChatActive,
       activeIcon: ChatPressed,
       inactiveIcon: Chat,
     },
@@ -58,11 +66,14 @@ export default function CurvedBottomBar() {
       name: "my",
       label: "마이",
       route: "/(tabs)/my",
+      active: isMyActive,
       activeIcon: MyPressed,
       inactiveIcon: My,
     },
   ];
-  if (current === "chat") return null;
+
+  if (isChatActive) return null;
+
   return (
     <View style={styles.container}>
       {/* 곡선 Background */}
@@ -80,6 +91,7 @@ export default function CurvedBottomBar() {
         </Svg>
       </View>
 
+      {/* 마이크 */}
       <Pressable
         style={styles.micButton}
         onPress={() => setIsMicActive(!isMicActive)}
@@ -91,19 +103,11 @@ export default function CurvedBottomBar() {
         )}
       </Pressable>
 
-      {/* 탭 아이콘들 */}
+      {/* 탭 아이콘 */}
       <View style={styles.tabRow}>
-        {/* LEFT GROUP */}
         <View style={styles.leftGroup}>
           {tabs.slice(0, 2).map((tab) => {
-            const ActiveIcon = tab.activeIcon;
-            const InactiveIcon = tab.inactiveIcon;
-
-            // 🔥 Home(index) 활성화 조건 따로 처리!
-            const isActive =
-              tab.name === "index"
-                ? current === "(tabs)" // 홈인 경우
-                : current === tab.name; // 일반 탭
+            const Icon = tab.active ? tab.activeIcon : tab.inactiveIcon;
 
             return (
               <TouchableOpacity
@@ -112,17 +116,13 @@ export default function CurvedBottomBar() {
                 onPress={() => router.replace(tab.route)}
                 activeOpacity={0.8}
               >
-                {isActive ? (
-                  <ActiveIcon width={22} height={22} />
-                ) : (
-                  <InactiveIcon width={22} height={22} />
-                )}
+                <Icon width={22} height={22} />
                 <Text
                   style={{
                     marginTop: 4,
                     fontSize: 12,
-                    fontWeight: isActive ? "700" : "500",
-                    color: isActive ? "#000" : "#C0C0C0",
+                    fontWeight: tab.active ? "700" : "500",
+                    color: tab.active ? "#000" : "#C0C0C0",
                   }}
                 >
                   {tab.label}
@@ -132,16 +132,10 @@ export default function CurvedBottomBar() {
           })}
         </View>
 
-        {/* RIGHT GROUP */}
         <View style={styles.rightGroup}>
           {tabs.slice(2, 4).map((tab) => {
-            const ActiveIcon = tab.activeIcon;
-            const InactiveIcon = tab.inactiveIcon;
+            const Icon = tab.active ? tab.activeIcon : tab.inactiveIcon;
 
-            const isActive =
-              tab.name === "index"
-                ? current === "(tabs)"
-                : current === tab.name;
             return (
               <TouchableOpacity
                 key={tab.name}
@@ -149,17 +143,13 @@ export default function CurvedBottomBar() {
                 onPress={() => router.replace(tab.route)}
                 activeOpacity={0.8}
               >
-                {isActive ? (
-                  <ActiveIcon width={22} height={22} />
-                ) : (
-                  <InactiveIcon width={22} height={22} />
-                )}
+                <Icon width={22} height={22} />
                 <Text
                   style={{
                     marginTop: 4,
                     fontSize: 12,
-                    fontWeight: isActive ? "700" : "500",
-                    color: isActive ? "#000" : "#C0C0C0",
+                    fontWeight: tab.active ? "700" : "500",
+                    color: tab.active ? "#000" : "#C0C0C0",
                   }}
                 >
                   {tab.label}

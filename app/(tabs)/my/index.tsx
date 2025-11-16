@@ -17,7 +17,7 @@ export default function MyPageScreen() {
           {/* 카드 박스 */}
           <View style={styles.profileCard}>
             <Text style={styles.name}>김루루 할머님</Text>
-            <Text style={styles.info}>74세 · 1949.02.14</Text>
+            <Text style={styles.info}>74세 · 1949.02.15</Text>
           </View>
         </View>
 
