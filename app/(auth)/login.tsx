@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +59,21 @@ export default function LoginScreen() {
         </View>
 
         {/* 로그인 버튼 */}
-        <Button title="로그인" onClick={() => router.push("/(tabs)" as any)} />
+        <Button
+          title="로그인"
+          onClick={() => {
+            Toast.show({
+              type: "success",
+              text1: "로그인되었습니다.",
+              text2: "환영합니다!",
+              position: "top",
+            });
+
+            setTimeout(() => {
+              router.replace("/(tabs)" as any);
+            }, 1300);
+          }}
+        />
       </View>
     </SafeAreaView>
   );

@@ -57,7 +57,10 @@ export default function ChatScreen() {
 
           <TouchableOpacity
             style={styles.micBtn}
-            onPress={() => setMicOn(!micOn)}
+            onPress={() => {
+              setMicOn(!micOn);
+              setIsStarted(true);
+            }}
           >
             {micOn ? (
               <MicPressed width={70} height={70} />

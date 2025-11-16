@@ -12,54 +12,32 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-type FieldType = "text" | "modal";
+export default function SignUpStepLayout(props) {
+  const {
+    firstFieldTitle,
+    firstFieldPlaceholder,
+    firstFieldType = "text",
+    firstFieldValue,
+    onPressFirstField,
 
-type SignUpStepLayoutProps = {
-  /* ----- 1번째 필드 ----- */
-  firstFieldTitle: string;
-  firstFieldPlaceholder: string;
-  firstFieldType?: FieldType;
-  firstFieldValue?: string;
-  onPressFirstField?: () => void;
+    secondFieldTitle,
+    secondFieldPlaceholder,
+    secondFieldType = "text",
+    secondFieldValue,
+    isSecondFieldPassword = false,
+    onPressSecondField,
 
-  /* ----- 2번째 필드 ----- */
-  secondFieldTitle?: string;
-  secondFieldPlaceholder?: string;
-  secondFieldType?: FieldType;
-  secondFieldValue?: string;
-  isSecondFieldPassword?: boolean;
-  onPressSecondField?: () => void;
+    onNext,
+  } = props;
 
-  onNext?: () => void;
-};
-
-export default function SignUpStepLayout({
-  firstFieldTitle,
-  firstFieldPlaceholder,
-  firstFieldType = "text",
-  firstFieldValue,
-  onPressFirstField,
-
-  secondFieldTitle,
-  secondFieldPlaceholder,
-  secondFieldType = "text",
-  secondFieldValue,
-  isSecondFieldPassword = false,
-  onPressSecondField,
-
-  onNext,
-}: SignUpStepLayoutProps) {
-  /* 내부 입력값 */
   const [firstValue, setFirstValue] = useState("");
   const [secondValue, setSecondValue] = useState("");
 
   const router = useRouter();
 
-  /* 표시할 최종 값 (외부 value > 내부 value) */
   const firstDisplayedValue = firstFieldValue ?? firstValue;
   const secondDisplayedValue = secondFieldValue ?? secondValue;
 
-  /* 버튼 활성화 조건 */
   const isNextEnabled =
     firstDisplayedValue.trim() !== "" &&
     (!secondFieldTitle || secondDisplayedValue.trim() !== "");
@@ -70,44 +48,48 @@ export default function SignUpStepLayout({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.gray200 }}>
-      {/* ---------------- 헤더 ---------------- */}
-      <View
-        style={{
-          paddingTop: 20,
-          paddingBottom: 57,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingHorizontal: 20,
-        }}
-      >
-        <TouchableOpacity onPress={() => router.back()} style={{ padding: 8 }}>
-          <ChevronLeft />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => router.replace("/entry")}
-          style={{ padding: 8 }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              color: colors.gray600,
-              fontWeight: "600",
-            }}
-          >
-            처음으로
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* ---------------- 본문 ---------------- */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={{ flex: 1, justifyContent: "space-between" }}
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
       >
+        {/* ------ HEADER ------ */}
+        <View
+          style={{
+            paddingTop: 20,
+            paddingBottom: 57,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingHorizontal: 20,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={{ padding: 8 }}
+          >
+            <ChevronLeft />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.replace("/entry")}
+            style={{ padding: 8 }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                color: colors.gray600,
+                fontWeight: "600",
+              }}
+            >
+              처음으로
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ------ CONTENT ------ */}
         <View style={{ flex: 1, paddingHorizontal: 20 }}>
-          {/* ---------- 1번째 필드 제목 ---------- */}
+          {/* 1st field title */}
           <Text
             style={{
               fontSize: 22,
@@ -119,7 +101,7 @@ export default function SignUpStepLayout({
             {firstFieldTitle}
           </Text>
 
-          {/* ---------- 1번째 입력 필드 ---------- */}
+          {/* 1st field */}
           {firstFieldType === "text" ? (
             <TextInput
               placeholder={firstFieldPlaceholder}
@@ -165,7 +147,7 @@ export default function SignUpStepLayout({
             </TouchableOpacity>
           )}
 
-          {/* ---------- 2번째 필드 ---------- */}
+          {/* 2nd field */}
           {secondFieldTitle && (
             <View style={{ marginTop: 40 }}>
               <Text
@@ -224,28 +206,37 @@ export default function SignUpStepLayout({
           )}
         </View>
 
-        {/* ---------------- 하단 버튼 ---------------- */}
-        <TouchableOpacity
-          onPress={handleNext}
-          activeOpacity={0.8}
+        {/* ------ FIXED FOOTER BUTTON (키보드 따라 이동) ------ */}
+        <View
           style={{
-            backgroundColor: isNextEnabled
-              ? colors.brandDefault
-              : colors.gray300,
-            paddingVertical: 20,
-            alignItems: "center",
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
           }}
         >
-          <Text
+          <TouchableOpacity
+            onPress={handleNext}
+            activeOpacity={0.8}
             style={{
-              color: isNextEnabled ? colors.gray100 : "#999",
-              fontSize: 16,
-              fontWeight: "600",
+              backgroundColor: isNextEnabled
+                ? colors.brandDefault
+                : colors.gray300,
+              paddingVertical: 20,
+              alignItems: "center",
             }}
           >
-            다음
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                color: isNextEnabled ? colors.gray100 : "#999",
+                fontSize: 16,
+                fontWeight: "600",
+              }}
+            >
+              다음
+            </Text>
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
