@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import WeeklyWalfare from "@/components/anaylysis/WeeklyWalfare";
 import WelfareCarousel from "@/components/anaylysis/WelfareCarousel";
 import DailyAnalysis from "./DailtyAnalysis";
 import WeeklyAnalysis from "./WeeklyAnalysis";
@@ -56,6 +57,7 @@ export default function AnalysisPage() {
         <View style={{ paddingBottom: 40 }}>
           {tab === "daily" ? <DailyAnalysis /> : <WeeklyAnalysis />}
         </View>
+        <WeeklyWalfare />
       </ScrollView>
     </SafeAreaView>
   );
