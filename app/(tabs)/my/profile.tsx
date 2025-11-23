@@ -28,7 +28,7 @@ export default function TabTwoScreen() {
           <TextInput style={styles.input} placeholder="김루루" />
 
           <Text style={styles.label}>생년월일</Text>
-          <TextInput style={styles.input} placeholder="1949년 2월 15일" />
+          <TextInput style={styles.input} placeholder="1949년 1월 1일" />
 
           <Text style={styles.label}>휴대폰 번호</Text>
           <TextInput style={styles.input} placeholder="010-0000-0000" />

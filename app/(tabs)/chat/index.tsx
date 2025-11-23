@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -15,7 +15,37 @@ import ChatMessages from "@/components/ui/chat/ChatMessages";
 export default function ChatScreen() {
   const [micOn, setMicOn] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
+  const backendIp = process.env.EXPO_PUBLIC_BACKEND_IP;
+  const backendPort = process.env.EXPO_PUBLIC_BACKEND_PORT;
 
+  useEffect(() => {
+    if (isStarted) {
+      const ws = new WebSocket(`ws://${backendIp}:${backendPort}/ws/connect`);
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        console.log("🔌 WebSocket 연결됨");
+        ws.send("hello from RN");
+      };
+
+      ws.onmessage = (e) => {
+        console.log("📩 서버 응답:", e.data);
+      };
+
+      ws.onerror = (err) => {
+        console.log("❌ WebSocket Error:", err);
+      };
+
+      ws.onclose = () => {
+        console.log("🔌 WebSocket closed");
+      };
+
+      return () => {
+        ws.close();
+      };
+    }
+  }, [isStarted]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inner}>

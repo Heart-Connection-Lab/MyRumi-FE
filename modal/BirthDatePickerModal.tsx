@@ -20,7 +20,7 @@ export function BirthDatePickerModal({ visible, onClose, onSelect }) {
   const currentYear = new Date().getFullYear();
 
   // 최근 100년
-  const years = Array.from({ length: 78 }, (_, i) => currentYear - i).reverse();
+  const years = Array.from({ length: 77 }, (_, i) => currentYear - i).reverse();
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
 

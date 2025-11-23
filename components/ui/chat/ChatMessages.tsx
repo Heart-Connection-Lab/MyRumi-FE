@@ -1,29 +1,35 @@
+import { useRef } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import RumiBubble from "./RummiBubble";
 import UserBubble from "./UserBubble";
 
 export default function ChatMessages() {
+  const scrollRef = useRef<ScrollView>(null);
+
+  const messages = [
+    { type: "rumi", text: "안녕하세요 루루 할머님 ☀️" },
+    { type: "user", text: "응, 안녕 루미야." },
+    { type: "rumi", text: "오늘 기분은 어떠세요? 😊" },
+  ];
+
   return (
     <View style={styles.wrapper}>
-      {/* 스크롤 되는 채팅 영역 */}
       <ScrollView
+        ref={scrollRef}
         style={styles.scroll}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        onContentSizeChange={() => {
+          scrollRef.current?.scrollToEnd({ animated: true });
+        }}
       >
-        <RumiBubble
-          time="7:20"
-          text="루루 할머니, 지금 아들에게 전화를 걸까요?"
-        />
-        <UserBubble time="7:21" text="응. 지금 바로 걸어줘." />
-        <RumiBubble time="7:21" text="[아들에게 전화 거는 중...]" />
-        <UserBubble time="7:21" text="응. 지금 바로 걸어줘." />
-        <RumiBubble time="7:21" text="[아들에게 전화 거는 중...]" />{" "}
-        <UserBubble time="7:21" text="응. 지금 바로 걸어줘." />
-        <RumiBubble time="7:21" text="[아들에게 전화 거는 중...]" />
-        {/* 테스트용: 스크롤 확인 */}
-        {/* <UserBubble time="7:22" text="테스트 메시지" /> */}
-        {/* 여러 줄 복사해서 테스트해도 됨 */}
+        {messages.map((msg, i) =>
+          msg.type === "rumi" ? (
+            <RumiBubble key={i} text={msg.text} time="7:21" />
+          ) : (
+            <UserBubble key={i} text={msg.text} time="7:21" />
+          )
+        )}
       </ScrollView>
     </View>
   );
@@ -32,20 +38,10 @@ export default function ChatMessages() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    flexDirection: "row",
   },
-
-  line: {
-    width: 2,
-    backgroundColor: "#E65B54",
-    marginRight: 12,
-    borderRadius: 999,
-  },
-
   scroll: {
     flex: 1,
   },
-
   content: {
     paddingBottom: 40,
     gap: 26,
