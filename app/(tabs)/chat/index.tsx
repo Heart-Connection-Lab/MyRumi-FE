@@ -3,53 +3,98 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import HomeIcon from "@/assets/images/home_pressed.svg";
-import Reload from "@/assets/images/reload.svg";
-import { router } from "expo-router";
-
 import MicDefault from "@/assets/images/mic_default.svg";
 import MicPressed from "@/assets/images/mic_pressed.svg";
+import Reload from "@/assets/images/reload.svg";
 import IconStars from "@/assets/images/stars.svg";
+
 import ChatIntro from "@/components/ui/chat/ChatIntro";
 import ChatMessages from "@/components/ui/chat/ChatMessages";
+import { router } from "expo-router";
+
+import { useStt } from "@/hooks/useStt";
 
 export default function ChatScreen() {
   const [micOn, setMicOn] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+
   const wsRef = useRef<WebSocket | null>(null);
+  const [wsReady, setWsReady] = useState(false);
+
   const backendIp = process.env.EXPO_PUBLIC_BACKEND_IP;
   const backendPort = process.env.EXPO_PUBLIC_BACKEND_PORT;
 
+  // -------------------------------------------------------------------
+  // 🔌 WebSocket 연결
+  // -------------------------------------------------------------------
   useEffect(() => {
-    if (isStarted) {
-      const ws = new WebSocket(`ws://${backendIp}:${backendPort}/ws/connect`);
-      wsRef.current = ws;
+    if (!isStarted) return;
 
-      ws.onopen = () => {
-        console.log("🔌 WebSocket 연결됨");
-        ws.send("hello from RN");
-      };
+    console.log("🔌 WebSocket 연결 시도...");
+    const ws = new WebSocket(`ws://${backendIp}:${backendPort}/ws/connect`);
+    wsRef.current = ws;
 
-      ws.onmessage = (e) => {
-        console.log("📩 서버 응답:", e.data);
-      };
+    ws.onopen = () => {
+      console.log("🔌 WebSocket 연결됨");
+      setWsReady(true);
+      ws.send("hello from RN");
+    };
 
-      ws.onerror = (err) => {
-        console.log("❌ WebSocket Error:", err);
-      };
+    ws.onmessage = (e) => console.log("📩 서버 응답:", e.data);
+    ws.onerror = (err) => console.log("❌ WebSocket Error:", err);
+    ws.onclose = () => {
+      console.log("🔌 WebSocket closed");
+      setWsReady(false);
+    };
 
-      ws.onclose = () => {
-        console.log("🔌 WebSocket closed");
-      };
-
-      return () => {
-        ws.close();
-      };
-    }
+    return () => ws.close();
   }, [isStarted]);
+
+  // -------------------------------------------------------------------
+  // 🎤 STT 훅 연결
+  // -------------------------------------------------------------------
+  useStt({
+    isListening: micOn,
+    onPartialResult: (txt) => {
+      console.log("⏳ 부분 인식:", txt);
+    },
+    onFinalResult: (txt) => {
+      console.log("✅ 최종 인식:", txt);
+
+      if (wsReady && wsRef.current) {
+        wsRef.current.send(
+          JSON.stringify({
+            type: "stt_text",
+            text: txt,
+          })
+        );
+      }
+    },
+  });
+
+  // -------------------------------------------------------------------
+  // 🎤 Mic 버튼
+  // -------------------------------------------------------------------
+  const onMicPress = () => {
+    if (!isStarted) {
+      setIsStarted(true);
+      return;
+    }
+
+    if (!wsReady) {
+      console.log("⚠ WebSocket 준비 안됨 → 마이크 차단");
+      return;
+    }
+
+    setMicOn((prev) => !prev);
+  };
+
+  // -------------------------------------------------------------------
+  // 렌더링
+  // -------------------------------------------------------------------
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inner}>
-        {/* ---------- 상단 ---------- */}
         <View style={styles.topRow}>
           <TouchableOpacity
             style={styles.circleIcon}
@@ -64,10 +109,8 @@ export default function ChatScreen() {
           </View>
         </View>
 
-        {/* ---------- 날짜 ---------- */}
         <Text style={styles.dateText}>2025년 4월 12일 토요일</Text>
 
-        {/* ---------- 중앙 영역 (Intro ↔ ChatMessages) ---------- */}
         <View style={styles.centerArea}>
           {isStarted ? (
             <ChatMessages />
@@ -76,7 +119,6 @@ export default function ChatScreen() {
           )}
         </View>
 
-        {/* ---------- 입력창 ---------- */}
         <View style={styles.inputRow}>
           <View style={styles.leftBox}>
             <IconStars width={24} height={24} />
@@ -85,13 +127,7 @@ export default function ChatScreen() {
             </Text>
           </View>
 
-          <TouchableOpacity
-            style={styles.micBtn}
-            onPress={() => {
-              setMicOn(!micOn);
-              setIsStarted(true);
-            }}
-          >
+          <TouchableOpacity style={styles.micBtn} onPress={onMicPress}>
             {micOn ? (
               <MicPressed width={70} height={70} />
             ) : (
@@ -105,18 +141,15 @@ export default function ChatScreen() {
 }
 
 /* -------------------- Styles -------------------- */
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F8F8F8" },
   inner: { flex: 1, paddingHorizontal: 20 },
-
   topRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 10,
     alignItems: "center",
   },
-
   circleIcon: {
     width: 48,
     height: 48,
@@ -130,7 +163,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 8, height: 5 },
     elevation: 20,
   },
-
   rightTag: {
     flexDirection: "row",
     alignItems: "center",
@@ -145,9 +177,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 8, height: 5 },
     elevation: 20,
   },
-
   tagText: { fontSize: 13, fontWeight: "600" },
-
   dateText: {
     marginTop: 20,
     textAlign: "center",
@@ -155,12 +185,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
-
   centerArea: {
     flex: 1,
     marginTop: 20,
   },
-
   inputRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -177,11 +205,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 7,
   },
-
   leftBox: { flexDirection: "row", gap: 6, alignItems: "center" },
-
   placeholderText: { color: "#E65B54", fontSize: 16, fontWeight: "700" },
-
   micBtn: {
     width: 52,
     height: 52,
